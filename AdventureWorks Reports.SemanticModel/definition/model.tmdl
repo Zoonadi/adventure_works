@@ -10,9 +10,12 @@ annotation __PBI_TimeIntelligenceEnabled = 0
 
 annotation PBI_ProTooling = ["DevMode"]
 
-annotation PBI_QueryOrder = ["Territory Lookup"]
+annotation PBI_QueryOrder = ["Territory Lookup","Product Lookup","Product Categories Lookup","Product Subcategories Lookup"]
 
 ref table 'Territory Lookup'
+ref table 'Product Lookup'
+ref table 'Product Categories Lookup'
+ref table 'Product Subcategories Lookup'
 
 ref cultureInfo en-US
 

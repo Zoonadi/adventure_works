@@ -1,0 +1,118 @@
+table 'Product Lookup'
+	lineageTag: 09059b9c-46f9-4baa-9e10-13d61356a679
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: bf6c17cb-b326-4f1f-90c8-83b625e1fafd
+		summarizeBy: count
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductSubcategoryKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 06462d31-c9a5-46ec-b386-f5e7d11f06e7
+		summarizeBy: count
+		sourceColumn: ProductSubcategoryKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductSKU
+		dataType: string
+		lineageTag: e704028e-cbe4-40cb-9e1b-85d20795b707
+		summarizeBy: none
+		sourceColumn: ProductSKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductName
+		dataType: string
+		lineageTag: 10e4ac5d-f4a2-4103-879e-fd054444b95e
+		summarizeBy: none
+		sourceColumn: ProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column ModelName
+		dataType: string
+		lineageTag: 0631ee91-7e60-4f28-8208-62631680df0d
+		summarizeBy: none
+		sourceColumn: ModelName
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductDescription
+		dataType: string
+		lineageTag: 8d394613-5717-4054-96c4-cd82c6bd1147
+		summarizeBy: none
+		sourceColumn: ProductDescription
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductColor
+		dataType: string
+		lineageTag: 483adc63-dc68-4237-84c4-9bb11364a43d
+		summarizeBy: none
+		sourceColumn: ProductColor
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductStyle
+		dataType: string
+		lineageTag: 61c071bf-cdc9-4acd-af92-83fd1e6f22dc
+		summarizeBy: none
+		sourceColumn: ProductStyle
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductCost
+		dataType: decimal
+		formatString: "K"#,0.###############;-"K"#,0.###############;"K"#,0.###############
+		lineageTag: 9bc469b7-4886-49e7-a3a6-4cacd4703e68
+		summarizeBy: sum
+		sourceColumn: ProductCost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-ZM"}
+
+	column ProductPrice
+		dataType: decimal
+		formatString: "K"#,0.###############;-"K"#,0.###############;"K"#,0.###############
+		lineageTag: 8f8dec28-2b40-45fa-8f6a-709054ae8fc2
+		summarizeBy: sum
+		sourceColumn: ProductPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-ZM"}
+
+	column 'SKU Type'
+		dataType: string
+		lineageTag: ccc73956-a151-49f1-9722-598da79d70ad
+		summarizeBy: none
+		sourceColumn: SKU Type
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Product Lookup' = m
+		mode: import
+		source =
+				let
+				  Source = Csv.Document(File.Contents("C:\adventure_works\Section 3 - Connecting & Shaping Data\Adventure Works Raw Data\AdventureWorks Product Lookup.csv"), [Delimiter = ",", Columns = 11, QuoteStyle = QuoteStyle.None]),
+				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"ProductKey", Int64.Type}, {"ProductSubcategoryKey", Int64.Type}, {"ProductSKU", type text}, {"ProductName", type text}, {"ModelName", type text}, {"ProductDescription", type text}, {"ProductColor", type text}, {"ProductSize", type text}, {"ProductStyle", type text}, {"ProductCost", type number}, {"ProductPrice", type number}}, "en-US"),
+				    #"Changed to Currency" = Table.TransformColumnTypes(#"Changed column type",{{"ProductCost", Currency.Type}, {"ProductPrice", Currency.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed to Currency",{"ProductSize"}),
+				    #"Added Custom" = Table.AddColumn(#"Removed Columns", "SKU Type", each [ProductSKU]),
+				    #"Extracted Text Before Delimiter" = Table.TransformColumns(#"Added Custom", {{"SKU Type", each Text.BeforeDelimiter(_, "-", 1), type text}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Extracted Text Before Delimiter","0","NA",Replacer.ReplaceText,{"ProductStyle"})
+				in
+				    #"Replaced Value"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
