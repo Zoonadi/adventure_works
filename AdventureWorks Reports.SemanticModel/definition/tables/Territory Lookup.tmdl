@@ -38,7 +38,7 @@ table 'Territory Lookup'
 		mode: import
 		source =
 				let
-				  Source = Csv.Document(File.Contents("C:\adventure_works\Section 3 - Connecting & Shaping Data\Adventure Works Raw Data\AdventureWorks Territory Lookup.csv"), [Delimiter = ",", Columns = 4, QuoteStyle = QuoteStyle.None]),
+				  Source = Csv.Document(File.Contents("C:\adventure_works\Adventure Works Raw Data\AdventureWorks Territory Lookup.csv"),[Delimiter=",", Columns=4, QuoteStyle=QuoteStyle.None]),
 				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"SalesTerritoryKey", Int64.Type}, {"Region", type text}, {"Country", type text}, {"Continent", type text}}, "en-US")
 				in

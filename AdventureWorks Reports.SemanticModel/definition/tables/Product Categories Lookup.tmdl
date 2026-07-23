@@ -22,7 +22,7 @@ table 'Product Categories Lookup'
 		mode: import
 		source =
 				let
-				  Source = Csv.Document(File.Contents("C:\adventure_works\Section 3 - Connecting & Shaping Data\Adventure Works Raw Data\AdventureWorks Product Categories Lookup.csv"), [Delimiter = ",", Columns = 2, QuoteStyle = QuoteStyle.None]),
+				  Source = Csv.Document(File.Contents("C:\adventure_works\Adventure Works Raw Data\AdventureWorks Product Categories Lookup.csv"),[Delimiter=",", Columns=2, QuoteStyle=QuoteStyle.None]),
 				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"ProductCategoryKey", Int64.Type}, {"CategoryName", type text}}, "en-US")
 				in

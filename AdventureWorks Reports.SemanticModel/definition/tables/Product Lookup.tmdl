@@ -101,7 +101,7 @@ table 'Product Lookup'
 		mode: import
 		source =
 				let
-				  Source = Csv.Document(File.Contents("C:\adventure_works\Section 3 - Connecting & Shaping Data\Adventure Works Raw Data\AdventureWorks Product Lookup.csv"), [Delimiter = ",", Columns = 11, QuoteStyle = QuoteStyle.None]),
+				  Source = Csv.Document(File.Contents("C:\adventure_works\Adventure Works Raw Data\AdventureWorks Product Lookup.csv"),[Delimiter=",", Columns=11, QuoteStyle=QuoteStyle.None]),
 				  #"Promoted headers" = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
 				  #"Changed column type" = Table.TransformColumnTypes(#"Promoted headers", {{"ProductKey", Int64.Type}, {"ProductSubcategoryKey", Int64.Type}, {"ProductSKU", type text}, {"ProductName", type text}, {"ModelName", type text}, {"ProductDescription", type text}, {"ProductColor", type text}, {"ProductSize", type text}, {"ProductStyle", type text}, {"ProductCost", type number}, {"ProductPrice", type number}}, "en-US"),
 				    #"Changed to Currency" = Table.TransformColumnTypes(#"Changed column type",{{"ProductCost", Currency.Type}, {"ProductPrice", Currency.Type}}),
